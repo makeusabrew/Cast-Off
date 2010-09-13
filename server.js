@@ -13,6 +13,13 @@ http.createServer(function(request, response) {
                 response.end();
             });
             break;
+        case '/js/client.js':
+            fs.readFile(process.cwd()+"/js/client.js", function(err, file) {
+                response.writeHead(200, {'Content-Type':'text/javascript'});
+                response.write(file, "binary");
+                response.end();
+            });
+            break;
         default:
             console.log("sending 404 for URL", cUrl);
             response.writeHead(404, {'Content-Type':'text/html'});
