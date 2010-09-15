@@ -2,29 +2,41 @@ var http = require("http");
 var url = require("url");
 var path = require("path");
 var fs = require("fs");
+var mime = require("./modules/mime");
+
+var WEBROOT = process.cwd()+"/../public";
 
 http.createServer(function(request, response) {
     var cUrl = url.parse(request.url).pathname;
+
     switch (cUrl) {
         case '/':
-            fs.readFile(process.cwd()+"/index.html", function(err, file) {
+            fs.readFile(WEBROOT+"/index.html", function(e, file) {
                 response.writeHead(200, {'Content-Type':'text/html'});
-                response.write(file, "binary");
-                response.end();
-            });
-            break;
-        case '/js/client.js':
-            fs.readFile(process.cwd()+"/js/client.js", function(err, file) {
-                response.writeHead(200, {'Content-Type':'text/javascript'});
-                response.write(file, "binary");
+                response.write(file);
                 response.end();
             });
             break;
         default:
-            console.log("sending 404 for URL", cUrl);
-            response.writeHead(404, {'Content-Type':'text/html'});
-            response.write("Sorry, that page could not be found");
-            response.end();
+            // try and match static stuff in /public
+            var filename= path.join(WEBROOT, cUrl);
+            path.exists(filename, function(exists) {
+                if (!exists) {
+                    console.log("sending 404 for URL", cUrl);
+                    response.writeHead(404, {'Content-Type':'text/html'});
+                    response.write("Sorry, that page could not be found");
+                    response.end();
+                    return;
+                }
+                fs.readFile(filename, function (e, file) {
+                    if (e) {
+                        throw e;
+                    }
+                    response.writeHead(200, mime.getType(filename));
+                    response.write(file);
+                    response.end();
+                });
+            });
             break;
     }
 }).listen(8124);
