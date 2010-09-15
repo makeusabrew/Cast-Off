@@ -3,12 +3,18 @@
     <head>
         <title>Cast Off</title>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+        <script src="/js/utils.js"></script>
         <script src="/js/world.js"></script>
         <script src="/js/client.js"></script>
         <script src="/js/game.js"></script>
         <script>
             $(function() {
                 Client.setBuffer("viewport");
+                Client.setViewport({
+                    'width': 640,
+                    'height': 480,
+                    'fov': 60
+                });
                 Game.tick();
             });
         </script>

@@ -3,7 +3,12 @@ var Game = {
     tickHandler: null,
 
     tick: function() {
-        
+        //@todo get world state from server
+        //@todo get my state from server
+        //@todo get other player states from server
+
+        Client.processInput(); //@todo
+        Client.tick();  //@todo
         Client.render();
 
         // yes, setInterval may seem more logical, but let's use setTimeout

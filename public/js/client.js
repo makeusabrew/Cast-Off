@@ -6,6 +6,8 @@ var Client = {
     health: 0,
 
     buffer: null,
+    viewport: {
+    },
 
     setBuffer: function(elem) {
         var elem = document.getElementById(elem);
@@ -17,12 +19,35 @@ var Client = {
         Client.buffer = elem.getContext("2d");
     },
 
+    setViewport: function(options) {
+        Client.viewport = options;
+        
+        // derived settings
+        // see http://www.permadi.com/tutorial/raycast/rayc5.html
+        Client.viewport.col_width = options.fov / options.width;
+        Client.viewport.distance = (options.width / 2) / Math.tan(Utils.deg2rad(options.fov / 2));
+        console.log("Viewport", Client.viewport);
+    },
+
     spawn: function() {
         health = 100;
     },
 
+    processInput: function() {
+        //
+    },
+
+    tick: function() {
+        //
+    },
+
     render: function() {
+        //back buffer
         Client.buffer.fillStyle = "rgb(0, 0, 0)";
         Client.buffer.fillRect(0, 0, 640, 480);
+
+        //@todo camera object here?
+
     }
 };
+
