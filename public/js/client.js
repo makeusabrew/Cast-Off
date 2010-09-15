@@ -47,7 +47,19 @@ var Client = {
         Client.buffer.fillRect(0, 0, 640, 480);
 
         //@todo camera object here?
+        //@todo better way of dealing with camera (pos, angle), world (what to render)
+        //and surfaces (e.g. buffer)
 
+        // render map
+        Client.buffer.fillStyle = "rgb(255, 255, 255)";
+        for (var i = 0; i < 10; i++) {
+            for (var j = 0; j < 10; j++) {
+                var cells = World.getCells();
+                if (cells[j][i]) {
+                    Client.buffer.fillRect(i*10, j*10, 10, 10);
+                }
+            }
+        }
     }
 };
 
