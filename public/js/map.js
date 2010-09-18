@@ -49,7 +49,7 @@ var Map = {
             var Client = Map.clients[i];
             var cAngle = Client.a - (Client.viewport.fov / 2);
             var cells = World.getCells();
-            var accuracy = 4;   // lower = better
+            var accuracy = 8;   // lower = better
             for (var j = 0; j < Client.buffer.getWidth(); j+= accuracy) {
                 if (cAngle < 0) {
                     cAngle += 360;
