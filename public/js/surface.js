@@ -28,3 +28,8 @@ Surface.prototype.getWidth = function() {
 Surface.prototype.getHeight = function() {
     return this.buffer.canvas.clientHeight;
 };
+
+Surface.prototype.pixel = function(x, y, colour) {
+    this.buffer.fillStyle = colour;
+    this.fillRect(x - 0.5, y - 0.5, 1, 1);
+};
