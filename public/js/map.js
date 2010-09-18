@@ -36,8 +36,11 @@ var Map = {
         }
 
         for (var i = 0; i < Map.clients.length; i++) {
+            var x = Map.clients[i].x * Globals.Map.SCALE;
+            var y = Map.clients[i].y * Globals.Map.SCALE;
+
             Map.buffer.fillStyle = "rgb(255, 0, 0)";
-            Map.buffer.fillRect(Map.clients[i].x, Map.clients[i].y, 1, 1);
+            Map.buffer.fillRect(x-1, y-1, 2, 2);
         }
     }
 }
