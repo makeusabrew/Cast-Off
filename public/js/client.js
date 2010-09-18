@@ -125,6 +125,10 @@ var Client = {
         var cAngle = Client.a - (Client.viewport.fov / 2.0);
         for (var i = 0; i < Client.buffer.getWidth(); i++) {
             var dist = Client.castRay(cAngle);
+            dist *= Utils.cos(Client.a - cAngle);
+            var sliceHeight = Globals.World.BLOCK_SIZE / dist * Client.viewport.distance;
+            var y = (Client.viewport.height / 2.0) - (sliceHeight / 2.0);
+            Client.buffer.line(i+0.5, y+0.5, i+0.5+1, y+0.5+(sliceHeight), "rgb(0, 0, 255)");  
             cAngle += Client.viewport.col_width;
         }
     },
