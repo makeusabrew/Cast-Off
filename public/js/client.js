@@ -128,5 +128,84 @@ var Client = {
             //castRay(cAngle);
             cAngle += Client.viewport.col_width;
         }
+    },
+
+    castRay: function(a) {
+        var cY = 0;
+        var cX = 0;
+        var Ya = 0;
+        var Xa = 0;
+        var possible = true; // specific angles will never collide with a wall
+        var horzDist = 0;
+        var vertDist = 0;
+        var cells = World.getCells();
+
+        // check for horizontal intersections first
+        if (a > 180 && a < 360) {
+            cY = (Math.floor(Client.y / Globals.World.BLOCK_SIZE) * Globals.World.BLOCK_SIZE) - 1;
+            Ya = -Globals.World.BLOCK_SIZE; 
+            cX = Client.x - (Client.y - cY) / Utils.tan(a);
+            Xa = -Globals.World.BLOCK_SIZE / Utils.tan(a);
+        } else if (a > 0 && a < 180) {
+            cY = (Math.floor(Client.y / Globals.World.BLOCK_SIZE) * Globals.World.BLOCK_SIZE) + Globals.World.BLOCK_SIZE;
+            Ya = Globals.World.BLOCK_SIZE; 
+            cX = Client.x - (Client.y - cY) / Utils.tan(a);
+            Xa = Globals.World.BLOCK_SIZE / Utils.tan(a);
+        } else if (a == 0 || a == 180) {
+            possible = false;
+            horzDist = 999999999999;
+        }
+        while (possible) {
+            //Map.buffer.pixel(cX* Globals.Map.SCALE, cY * Globals.Map.SCALE, "rgb(0, 255, 0)");
+            var gX = Math.floor(cX / Globals.World.BLOCK_SIZE);
+            var gY = Math.floor(cY / Globals.World.BLOCK_SIZE);
+            if (gX < 0 || gX >= World.getWidth() || gY < 0 || gY >= World.getHeight() || cells[gY][gX] != 0) {
+                var dx = cX - Client.x;
+                var dy = cY - Client.y;
+                horzDist = Math.sqrt(dx*dx + dy*dy);
+                break;
+            }
+            cX += Xa;
+            cY += Ya;
+        }
+
+        // reset a few vars
+        cY = 0;
+        cX = 0;
+        Ya = 0;
+        Xa = 0;
+        possible = true;
+
+        // now check for vertical intersections
+        if (a > 90 && a < 270) {
+            cX = (Math.floor(Client.x / Globals.World.BLOCK_SIZE) * Globals.World.BLOCK_SIZE) - 1;
+            Xa = -Globals.World.BLOCK_SIZE;
+            cY = Client.y - (Client.x - cX) * Utils.tan(a);
+            Ya = -Globals.World.BLOCK_SIZE * Utils.tan(a);
+        } else if ((a > 270 && a < 360) || (a > 0 && a < 90)) {
+            cX = (Math.floor(Client.x / Globals.World.BLOCK_SIZE) * Globals.World.BLOCK_SIZE) + Globals.World.BLOCK_SIZE;
+            Xa = Globals.World.BLOCK_SIZE;
+            cY = Client.y - (Client.x - cX) * Utils.tan(a);
+            Ya = Globals.World.BLOCK_SIZE * Utils.tan(a);
+        } else if (a == 90 || a == 270) {
+            possible = false;
+            vertDist = 9999999999999;
+        }
+
+        while (possible) {
+            //Map.buffer.pixel(cX* Globals.Map.SCALE, cY * Globals.Map.SCALE, "rgb(0, 0, 255)");
+            var gX = Math.floor(cX / Globals.World.BLOCK_SIZE);
+            var gY = Math.floor(cY / Globals.World.BLOCK_SIZE);
+            if (gX < 0 || gX >= World.getWidth() || gY < 0 || gY >= World.getHeight() || cells[gY][gX] != 0) {
+                var dx = cX - Client.x;
+                var dy = cY - Client.y;
+                vertDist = Math.sqrt(dx*dx + dy*dy);
+                break;
+            }
+            cX += Xa;
+            cY += Ya;
+        }
+        var dist = horzDist < vertDist ? horzDist : vertDist;
+        return dist;
     }
 };
