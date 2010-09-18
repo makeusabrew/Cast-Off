@@ -16,12 +16,7 @@ var Utils = {
     },
 
     getBuffer: function(elem) {
-        var elem = document.getElementById(elem);
-        if (!elem.getContext) {
-            throw new Error('Canvas not available');
-        }
-
-        return elem.getContext("2d");
+        return new Surface(elem);
     },
 
     keys: {

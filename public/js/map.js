@@ -20,17 +20,15 @@ var Map = {
 
     render: function() {
         //back buffer
-        Map.buffer.fillStyle = "rgb(0, 0, 200)";
-        Map.buffer.fillRect(0, 0, Map.buffer.canvas.clientWidth, Map.buffer.canvas.clientHeight);
+        Map.buffer.fillRect(0, 0, Map.buffer.getWidth(), Map.buffer.getHeight(), "rgb(0, 0, 0)");
         
         // render map
         var blockSize = Globals.World.BLOCK_SIZE * Globals.Map.SCALE;
         var cells = World.getCells();
-        Map.buffer.fillStyle = "rgb(255, 255, 0)";
         for (var y = 0; y < World.getHeight(); y++) {
             for (var x = 0; x < World.getWidth(); x++) {
                 if (cells[y][x]) {
-                    Map.buffer.fillRect(x*blockSize, y*blockSize, blockSize, blockSize);
+                    Map.buffer.fillRect(x*blockSize, y*blockSize, blockSize, blockSize, "rgb(255, 255, 0)");
                 }
             }
         }
@@ -39,8 +37,13 @@ var Map = {
             var x = Map.clients[i].x * Globals.Map.SCALE;
             var y = Map.clients[i].y * Globals.Map.SCALE;
 
-            Map.buffer.fillStyle = "rgb(255, 0, 0)";
-            Map.buffer.fillRect(x-1, y-1, 2, 2);
+            Map.buffer.fillRect(x-1, y-1, 2, 2, "rgb(255, 0, 0)");
+            
+            var dlen = 20;
+            var dx = x + (Utils.cos(Map.clients[i].a) * 20);
+            var dy = y + (Utils.sin(Map.clients[i].a) * 20);
+
+            Map.buffer.line(x, y, dx, dy, "rgb(255, 0, 0)");
         }
     }
 }

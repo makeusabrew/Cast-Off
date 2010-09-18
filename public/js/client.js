@@ -112,14 +112,13 @@ var Client = {
 
     render: function() {
         //back buffer
-        Client.buffer.fillStyle = "rgb(0, 0, 0)";
-        Client.buffer.fillRect(0, 0, Client.buffer.canvas.clientWidth, Client.buffer.canvas.clientHeight);
+        Client.buffer.fillRect(0, 0, Client.buffer.getWidth(), Client.buffer.getHeight());
 
         //@todo camera object here?
         //@todo better way of dealing with camera (pos, angle), world (what to render)
         //and surfaces (e.g. buffer)
-        var cAngle = Client.a - (options.fov / 2.0);
-        for (var i = 0; i < Client.buffer.canvas.clientWidth; i++) {
+        var cAngle = Client.a - (Client.viewport.fov / 2.0);
+        for (var i = 0; i < Client.buffer.getWidth(); i++) {
             // cast ray
             //castRay(cAngle);
             cAngle += Client.viewport.col_width;
