@@ -5,8 +5,68 @@ var Client = {
     a: 0.0,
     health: 0,
 
+    // movement. @todo this needs serious improvement!
+    forwards: false,
+    backwards: false,
+    left: false,
+    right: false,
+
     buffer: null,
     viewport: {
+    },
+
+    init: function() {
+        $(window).keydown(function(e) {
+            e.preventDefault();
+            var key = e.which;
+            switch (key) {
+                case Utils.keys.UP_ARROW:
+                    Client.forwards = true;
+                    Client.backwards = false;
+                    break;
+
+                case Utils.keys.DOWN_ARROW:
+                    Client.forwards = false;
+                    Client.backwards = true;
+                    break;
+
+                case Utils.keys.LEFT_ARROW:
+                    Client.left = true;
+                    Client.right = false;
+                    break;
+
+                case Utils.keys.RIGHT_ARROW:
+                    Client.left = false;
+                    Client.right = true;
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        $(window).keyup(function(e) {
+            e.preventDefault();
+            var key = e.which;
+            switch (key) {
+                case Utils.keys.UP_ARROW:
+                    Client.forwards = false;
+                    break;
+
+                case Utils.keys.DOWN_ARROW:
+                    Client.backwards = false;
+                    break;
+
+                case Utils.keys.LEFT_ARROW:
+                    Client.left = false;
+                    break;
+
+                case Utils.keys.RIGHT_ARROW:
+                    Client.right = false;
+                    break;
+                default:
+                    break;
+            }
+        });
     },
 
     setBuffer: function(elem) {
@@ -34,7 +94,10 @@ var Client = {
     },
 
     processInput: function() {
-        //
+        if (Client.forwards) {
+            Client.x += Math.cos(Client.a) * Globals.Client.MOVE_SPEED;
+            Client.y += Math.sin(Client.a) * Globals.Client.MOVE_SPEED;
+        }
     },
 
     tick: function() {
@@ -60,6 +123,9 @@ var Client = {
                 }
             }
         }
+
+        Client.buffer.fillStyle = "rgb(255, 0, 0)";
+        Client.buffer.fillRect(Client.x, Client.y, 2, 2);
     }
 };
 
