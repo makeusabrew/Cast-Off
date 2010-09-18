@@ -70,13 +70,7 @@ var Client = {
     },
 
     setBuffer: function(elem) {
-        var elem = document.getElementById(elem);
-        if (!elem.getContext) {
-            Client.buffer = null;
-            throw 'Canvas not available';
-        }
-
-        Client.buffer = elem.getContext("2d");
+        Client.buffer = Utils.getBuffer(elem);
     },
 
     setViewport: function(options) {
@@ -124,20 +118,5 @@ var Client = {
         //@todo camera object here?
         //@todo better way of dealing with camera (pos, angle), world (what to render)
         //and surfaces (e.g. buffer)
-
-        // render map
-        Client.buffer.fillStyle = "rgb(255, 255, 255)";
-        for (var i = 0; i < 10; i++) {
-            for (var j = 0; j < 10; j++) {
-                var cells = World.getCells();
-                if (cells[j][i]) {
-                    Client.buffer.fillRect(i*10, j*10, 10, 10);
-                }
-            }
-        }
-
-        Client.buffer.fillStyle = "rgb(255, 0, 0)";
-        Client.buffer.fillRect(Client.x, Client.y, 2, 2);
     }
 };
-

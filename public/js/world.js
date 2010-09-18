@@ -1,5 +1,7 @@
 var World = {
     _cells: null,
+    _width: 0,
+    _height: 0,
 
     loadMap: function() {
         var d = [
@@ -15,7 +17,13 @@ var World = {
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         ];
         World._cells = d;
-        console.log("loaded map", World._cells);
+        World._width = d[0].length;
+        World._height = d.length;
+        console.log("loaded map, dimensions", World._width, "x", World._height);
+    },
+
+    generateRandomMap: function() {
+        //
     },
 
     getCells: function() {

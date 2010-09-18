@@ -15,6 +15,15 @@ var Utils = {
         return Math.tan(Utils.deg2rad(angle));
     },
 
+    getBuffer: function(elem) {
+        var elem = document.getElementById(elem);
+        if (!elem.getContext) {
+            throw new Error('Canvas not available');
+        }
+
+        return elem.getContext("2d");
+    },
+
     keys: {
         UP_ARROW : 38,
         DOWN_ARROW : 40,

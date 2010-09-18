@@ -1,11 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
+        <meta charset="utf-8">
+
         <title>Cast Off</title>
+
+        <link rel="stylesheet" href="/css/main.css">
+
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
         <script src="/js/globals.js"></script>
         <script src="/js/utils.js"></script>
         <script src="/js/world.js"></script>
+        <script src="/js/map.js"></script>
         <script src="/js/client.js"></script>
         <script src="/js/game.js"></script>
         <script>
@@ -18,6 +24,17 @@
                     'height': 480,
                     'fov': 60
                 });
+
+                Game.registerInputHandler(Client.processInput);
+                Game.registerTickHandler(Client.tick);
+                Game.registerRenderHandler(Client.render);
+
+                Map.setBuffer("overmap");
+
+                Map.registerClient(Client);
+
+                Game.registerRenderHandler(Map.render);
+
                 Game.tick();
             });
         </script>
@@ -27,9 +44,16 @@
             <h1>Cast Off</h1>
         </header>
         <div>
-            <canvas id="viewport" width="640" height="480">
-                <p>Alas, your browser does not support canvas. Bad luck.</p>
-            </canvas>
+            <div>
+                <canvas id="overmap" width="100" height="100">
+                    <p>Alas, your browser does not support canvas. Bad luck.</p>
+                </canvas>
+            </div>
+            <div>
+                <canvas id="viewport" width="640" height="480">
+                    <p>Alas, your browser does not support canvas. Bad luck.</p>
+                </canvas>
+            </div>
         </div>
         <footer>
             by <a href="http://github.com/makeusabrew">makeusabrew</a>
