@@ -48,7 +48,7 @@ var Map = {
             ********************************************/
             var Client = Map.clients[i];
             var cAngle = Client.a - (Client.viewport.fov / 2);
-            var accuracy = 8;   // lower = better
+            var accuracy = Globals.Map.CAST_ACCURACY; 
             for (var j = 0; j < Client.buffer.getWidth(); j+= accuracy) {
                 if (cAngle < 0) {
                     cAngle += 360;

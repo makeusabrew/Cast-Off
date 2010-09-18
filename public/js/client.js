@@ -124,8 +124,7 @@ var Client = {
         //and surfaces (e.g. buffer)
         var cAngle = Client.a - (Client.viewport.fov / 2.0);
         for (var i = 0; i < Client.buffer.getWidth(); i++) {
-            // cast ray
-            //castRay(cAngle);
+            var dist = Client.castRay(cAngle);
             cAngle += Client.viewport.col_width;
         }
     },

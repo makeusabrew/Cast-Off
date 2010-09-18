@@ -11,6 +11,6 @@ var Globals = {
 
     Map: {
         SCALE: 1/10,
-        BLOCK_SIZE: 60 // 64 * (1/10) just doesn't render nicely
+        CAST_ACCURACY: 10   // higher = less accurate
     }
 };
