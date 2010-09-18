@@ -15,6 +15,10 @@ var Utils = {
         return Math.tan(Utils.deg2rad(angle));
     },
 
+    atan: function(angle) {
+        return Math.atan(Utils.deg2rad(angle));
+    },
+
     getBuffer: function(elem) {
         return new Surface(elem);
     },

@@ -1,7 +1,7 @@
 //@todo split out Client / Player?
 var Client = {
-    x: 100,
-    y: 100,
+    x: 280,
+    y: 230,
     a: 0.0,
     health: 0,
 
@@ -101,6 +101,11 @@ var Client = {
         if (Client.right || Client.left) {
             var dir = Client.right ? 1 : - 1;
             Client.a += (Globals.Client.TURN_SPEED * dir);
+            if (Client.a >= 360) {
+                Client.a -= 360;
+            } else if (Client.a < 0) {
+                Client.a += 360;
+            }
         }
 
 
