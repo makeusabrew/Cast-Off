@@ -53,10 +53,17 @@ var Map = {
                     cAngle -= 360;
                 }
 
-                var dist = Client.castRay(cAngle);
+                var ray = Client.castRay(cAngle);
+                var dist = ray.dist;
                 var px = Client.x + Utils.cos(cAngle) * dist;
                 var py = Client.y + Utils.sin(cAngle) * dist;
-                Map.buffer.line(Client.x * Globals.Map.SCALE, Client.y * Globals.Map.SCALE, px * Globals.Map.SCALE, py * Globals.Map.SCALE, "rgb(255, 128, 64)");
+                var colour = "";
+                if (ray.vertical) {
+                    colour = "rgb(255, 128, 64)";
+                } else {
+                    colour = "rgb(64, 128, 255)";
+                }
+                Map.buffer.line(Client.x * Globals.Map.SCALE, Client.y * Globals.Map.SCALE, px * Globals.Map.SCALE, py * Globals.Map.SCALE, colour);
                 cAngle += (Client.viewport.col_width*accuracy);
             }
         }

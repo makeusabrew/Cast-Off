@@ -124,11 +124,23 @@ var Client = {
         //and surfaces (e.g. buffer)
         var cAngle = Client.a - (Client.viewport.fov / 2.0);
         for (var i = 0; i < Client.buffer.getWidth(); i++) {
-            var dist = Client.castRay(cAngle);
+            if (cAngle < 0) {
+                cAngle += 360;
+            } else if (cAngle >= 360) {
+                cAngle -= 360;
+            }
+            var ray = Client.castRay(cAngle);
+            var dist = ray.dist;
             dist *= Utils.cos(Client.a - cAngle);
             var sliceHeight = Globals.World.BLOCK_SIZE / dist * Client.viewport.distance;
             var y = (Client.viewport.height / 2.0) - (sliceHeight / 2.0);
-            Client.buffer.line(i+0.5, y+0.5, i+0.5+1, y+0.5+(sliceHeight), "rgb(0, 0, 255)");  
+            var colour = "";
+            if (ray.vertical) {
+                colour = "rgb(0, 0, 255)";
+            } else {
+                colour = "rgb(10, 10, 128)";
+            }
+            Client.buffer.line(i+0.5, y+0.5, i+0.5+1, y+0.5+(sliceHeight), colour);  
             cAngle += Client.viewport.col_width;
         }
     },
@@ -156,7 +168,7 @@ var Client = {
             Xa = Globals.World.BLOCK_SIZE / Utils.tan(a);
         } else if (a == 0 || a == 180) {
             possible = false;
-            horzDist = 999999999999;
+            horzDist = 9999999999999999999;
         }
         while (possible) {
             //Map.buffer.pixel(cX* Globals.Map.SCALE, cY * Globals.Map.SCALE, "rgb(0, 255, 0)");
@@ -185,14 +197,14 @@ var Client = {
             Xa = -Globals.World.BLOCK_SIZE;
             cY = Client.y - (Client.x - cX) * Utils.tan(a);
             Ya = -Globals.World.BLOCK_SIZE * Utils.tan(a);
-        } else if ((a >= 270 && a < 360) || (a >= 0 && a < 90)) {
+        } else if ((a > 270 && a < 360) || (a >= 0 && a < 90)) {
             cX = (Math.floor(Client.x / Globals.World.BLOCK_SIZE) * Globals.World.BLOCK_SIZE) + Globals.World.BLOCK_SIZE;
             Xa = Globals.World.BLOCK_SIZE;
             cY = Client.y - (Client.x - cX) * Utils.tan(a);
             Ya = Globals.World.BLOCK_SIZE * Utils.tan(a);
         } else if (a == 90 || a == 270) {
             possible = false;
-            vertDist = 9999999999999;
+            vertDist = 9999999999999999999;
         }
 
         while (possible) {
@@ -208,7 +220,14 @@ var Client = {
             cX += Xa;
             cY += Ya;
         }
-        var dist = horzDist < vertDist ? horzDist : vertDist;
-        return dist;
+        var ray = {};
+        if (vertDist < horzDist) {
+            ray.dist = vertDist;
+            ray.vertical = true;
+        } else {
+            ray.dist = horzDist;
+            ray.vertical = false;
+        }
+        return ray;
     }
 };
