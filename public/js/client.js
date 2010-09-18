@@ -1,7 +1,7 @@
 //@todo split out Client / Player?
 var Client = {
-    x: 0,
-    y: 0,
+    x: 100,
+    y: 100,
     a: 0.0,
     health: 0,
 
@@ -113,10 +113,16 @@ var Client = {
     render: function() {
         //back buffer
         Client.buffer.fillStyle = "rgb(0, 0, 0)";
-        Client.buffer.fillRect(0, 0, 640, 480);
+        Client.buffer.fillRect(0, 0, Client.buffer.canvas.clientWidth, Client.buffer.canvas.clientHeight);
 
         //@todo camera object here?
         //@todo better way of dealing with camera (pos, angle), world (what to render)
         //and surfaces (e.g. buffer)
+        var cAngle = Client.a - (options.fov / 2.0);
+        for (var i = 0; i < Client.buffer.canvas.clientWidth; i++) {
+            // cast ray
+            //castRay(cAngle);
+            cAngle += Client.viewport.col_width;
+        }
     }
 };
