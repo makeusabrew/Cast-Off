@@ -32,7 +32,10 @@ http.createServer(function(request, response) {
                     if (e) {
                         throw e;
                     }
-                    response.writeHead(200, mime.getType(filename));
+                    response.writeHead(200, {
+                        'Content-Length' : file.length,
+                        'Content-Type' : mime.getType(filename)
+                    });
                     response.write(file);
                     response.end();
                 });

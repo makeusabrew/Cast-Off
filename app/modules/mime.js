@@ -5,13 +5,16 @@ exports.getType = function(file) {
     if (extpos == -1) {
         return exports.default;
     }
-    var ext = file.substr(extpos);
+    var ext = file.substr(extpos+1);
 
-    return exports.types[ext] || exports.default;
+    var mime = exports.types[ext] || exports.default;
+    /*console.log("returning type ["+mime+"] for extension ["+ext+"]");*/
+    return mime;
 };
 
 exports.types = {
     'html' : 'text/html',
     'txt'  : 'text/plain',
+    'css'  : 'text/css',
     'js'   : 'application/javascript'
 };
