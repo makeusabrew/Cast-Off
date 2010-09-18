@@ -85,19 +85,31 @@ var Client = {
         // derived settings
         // see http://www.permadi.com/tutorial/raycast/rayc5.html
         Client.viewport.col_width = options.fov / options.width;
-        Client.viewport.distance = (options.width / 2) / Math.tan(Utils.deg2rad(options.fov / 2));
+        Client.viewport.distance = (options.width / 2) / Utils.tan(options.fov / 2);
         console.log("Viewport", Client.viewport);
     },
 
     spawn: function() {
         health = 100;
+        //@todo random X not in a block
+        //@todo random Y not in a block
+        //@todo semi random angle - but not directly facing a wall!
     },
 
     processInput: function() {
-        if (Client.forwards) {
-            Client.x += Math.cos(Client.a) * Globals.Client.MOVE_SPEED;
-            Client.y += Math.sin(Client.a) * Globals.Client.MOVE_SPEED;
+        if (Client.forwards || Client.backwards) {
+            // both essentially the same, just need to set a direction
+            var dir = Client.forwards ? 1 : -1;
+            Client.x += Utils.cos(Client.a) * (Globals.Client.MOVE_SPEED * dir);
+            Client.y += Utils.sin(Client.a) * (Globals.Client.MOVE_SPEED * dir);
         }
+
+        if (Client.right || Client.left) {
+            var dir = Client.right ? 1 : - 1;
+            Client.a += (Globals.Client.TURN_SPEED * dir);
+        }
+
+
     },
 
     tick: function() {
