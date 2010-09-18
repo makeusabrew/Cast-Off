@@ -43,9 +43,6 @@ var Map = {
             Map.buffer.fillRect(x-1, y-1, 2, 2, "rgb(255, 0, 0)");
             
 
-            /********************************************
-            *
-            ********************************************/
             var Client = Map.clients[i];
             var cAngle = Client.a - (Client.viewport.fov / 2);
             var accuracy = Globals.Map.CAST_ACCURACY; 

@@ -181,7 +181,7 @@ var Client = {
             Xa = -Globals.World.BLOCK_SIZE;
             cY = Client.y - (Client.x - cX) * Utils.tan(a);
             Ya = -Globals.World.BLOCK_SIZE * Utils.tan(a);
-        } else if ((a > 270 && a < 360) || (a > 0 && a < 90)) {
+        } else if ((a >= 270 && a < 360) || (a >= 0 && a < 90)) {
             cX = (Math.floor(Client.x / Globals.World.BLOCK_SIZE) * Globals.World.BLOCK_SIZE) + Globals.World.BLOCK_SIZE;
             Xa = Globals.World.BLOCK_SIZE;
             cY = Client.y - (Client.x - cX) * Utils.tan(a);
