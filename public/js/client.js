@@ -115,6 +115,7 @@ var Client = {
         var cells = World.getCells();
 
         // check for horizontal intersections first
+        //@todo need some unit tests to verify every angle is caught and handled properly
         if (a > 180 && a < 360) {
             cY = (Math.floor(Client.y / Globals.World.BLOCK_SIZE) * Globals.World.BLOCK_SIZE) - 1;
             Ya = -Globals.World.BLOCK_SIZE; 
@@ -282,7 +283,7 @@ var Client = {
     },
 
     activate: function() {
-        $(document).trigger("client_ready");
+        Bus.publish("client_ready");
     }
 
 };

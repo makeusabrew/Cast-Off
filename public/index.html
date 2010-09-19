@@ -12,6 +12,7 @@
         <script src="/js/globals.js"></script>
         <script src="/js/surface.js"></script>
         <script src="/js/utils.js"></script>
+        <script src="/js/bus.js"></script>
         <script src="/js/world.js"></script>
         <script src="/js/map.js"></script>
         <script src="/js/client.js"></script>
@@ -36,7 +37,7 @@
 
                 Game.registerRenderHandler(Map.render);
 
-                $(document).bind("client_ready", function() {
+                Bus.subscribe("client_ready", null, function() {
                     Game.tick();
                 });
             });
