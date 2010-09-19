@@ -248,7 +248,7 @@ var Client = {
     },
 
     _bindSockets: function() {
-        Client.ws = new io.Socket("127.0.0.1"); 
+        Client.ws = new io.Socket(); 
         Client.ws.connect();
         Client.ws.on("connect", Client.onOpen);
         Client.ws.on("message", Client.onMessage);

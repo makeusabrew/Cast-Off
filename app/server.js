@@ -51,16 +51,14 @@ console.log("Server running on port 8124");
 
 var socket = io.listen(server);
 
-// keep track of all connected clients
-var clients = [];
 
 // load the map data once only
-var World = require("./game/world.js");
-var map = World.loadMap();
+var world = require("./game/world.js").factory();
+var map = world.loadMap();
 
 socket.on("connection", function(sClient) {
     var client = require("./game/client.js").factory();
-    clients.push(client);
+    world.addClient(client);
     var pos = client.getPosition(); 
     var msg = {
         type: 'START',
@@ -69,7 +67,11 @@ socket.on("connection", function(sClient) {
         entities: [] //@todo
     };
     sClient.send(JSON.stringify(msg));
-    socket.on("message", function(msg, client) {
+    sClient.on("message", function(msg, sClient) {
         // hand off to something else to handle message
+    });
+    sClient.on("disconnect", function() {
+        World.removeClient();
+        //@todo broadcast? or does ^^ take care of that?
     });
 });

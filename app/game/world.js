@@ -1,4 +1,9 @@
-exports.loadMap = function() {
+World = function() {
+    this.clients = [];
+    this.cells = null;
+};
+
+World.prototype.loadMap = function() {
     var d = [
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -21,5 +26,18 @@ exports.loadMap = function() {
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], 
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ];
-    return d;
+    this.cells = d;
+    return this.cells;
+};
+
+World.prototype.addClient = function(client) {
+    this.clients.push(client);
+};
+
+World.prototype.removeClient = function(client) {
+    //
+};
+
+exports.factory = function() {
+    return new World();
 };
