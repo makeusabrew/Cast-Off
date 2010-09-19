@@ -3,7 +3,7 @@ var Client = {
     x: 0,
     y: 0,
     a: 0.0,
-    health: 0,
+    h: 0,
 
     // movement. @todo this needs serious improvement!
     forwards: false,
@@ -15,8 +15,6 @@ var Client = {
     ws: null,
 
     world: null, // a reference to the world. could remove...
-
-    entities: [],
 
     viewport: {
     },
@@ -41,7 +39,7 @@ var Client = {
     },
 
     spawn: function(pos) {
-        health = 100;
+        Client.h = 100;
         Client.x = pos.x;
         Client.y = pos.y;
         Client.a = pos.a;
@@ -265,12 +263,12 @@ var Client = {
             case 'START':
                 Client.loadWorld(msg.world);
                 Client.spawn(msg.position);
-                Client.registerEntities(msg.entities);
+                EntityManager.addEntities(msg.entities);
                 Client.activate();
                 break;
 
             case 'NEW_CLIENT':
-                Client.addEntity(msg.position);
+                EntityManager.addEntity(msg.entity);
                 break;
             
             default:
@@ -291,21 +289,4 @@ var Client = {
     activate: function() {
         Bus.publish("client_ready");
     },
-
-    registerEntities: function(entities) {
-        // entities is an array, so just
-        // push each entry onto our local stack
-        for (var i = 0; i < entities.length; i++) {
-            Client.addEntity(entities[i]);
-        }
-    },
-
-    addEntity: function(data) {
-        var entity = new Entity(data);
-        Client.entities.push(entity);
-        console.log("new entity, data:", entity.getData());
-        
-        Map.addEntity(entity);
-    }
-
 };

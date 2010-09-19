@@ -34,7 +34,6 @@
 
                 Bus.subscribe("client_ready", null, function() {
                     Map.setBuffer("overmap");
-                    Map.addEntity(Client);
                     Game.registerRenderHandler(Map.render);
                     Game.tick();
                 });

@@ -1,5 +1,5 @@
 Client = function(sId) {
-    this.health = 100;
+    this.h = 100;
     this.x = 0;
     this.y = 0;
     this.a = 0;
@@ -28,6 +28,7 @@ Client.prototype.getData = function() {
         x: this.x,
         y: this.y,
         a: this.a,
+        h: this.h,
         sId: this.sessionId
     };
 };

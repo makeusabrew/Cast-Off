@@ -59,6 +59,10 @@ World.prototype.getOtherEntities = function(client) {
     return others;
 };
 
+World.prototype.getEntities = function() {
+    return this.clients;
+};
+
 World.prototype.getWidth = function() {
     return this._width;
 };

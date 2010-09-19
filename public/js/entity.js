@@ -17,3 +17,43 @@ Entity.prototype.getData = function() {
         type: this.type
     };
 };
+
+Entity.prototype.getId = function() {
+    return this.id;
+};
+
+EntityManager = {
+    entities: [],
+    addEntity: function(eData) {
+        var e = new Entity(eData);
+        EntityManager.entities.push(e);
+    },
+
+    addEntities: function(entities) {
+        for (var i = 0; i < entities.length; i++) {
+            EntityManager.addEntity(entities[i]);
+        }
+    },
+
+    getById: function(id) {
+        for (var i = 0; i < EntityManager.entities.length; i++) {
+            if (EntityManager.entities[i].getId() == id) {
+                return EntityManager.entities[i];
+            }
+        }
+        return null;
+    },
+
+    getAll: function(type) {
+        if (typeof type == "undefined") {
+            return EntityManager.entities;
+        }
+        var _entities = [];
+        for (var i = 0; i < EntityManager.entities.length; i++) {
+            if (EntityManager.entities[i].type == type) {
+                _entities.push(EntityManager.entities[i]);
+            }
+        }
+        return _entities;
+    }
+};

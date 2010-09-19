@@ -61,7 +61,7 @@ socket.on("connection", function(sClient) {
     client.spawn(world);
     world.addClient(client);
     
-    var entities = world.getOtherEntities(client);
+    var entities = world.getEntities();
     var pos = client.getData(); 
     var msg = {
         type: 'START',

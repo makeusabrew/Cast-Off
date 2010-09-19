@@ -2,8 +2,6 @@ var Map = {
 
     buffer: null,
 
-    entities: [],
-
     setBuffer: function(elem) {
         var bWidth = (World.getWidth() * Globals.World.BLOCK_SIZE) * Globals.Map.SCALE;
         var bHeight = (World.getHeight() * Globals.World.BLOCK_SIZE) * Globals.Map.SCALE;
@@ -12,25 +10,6 @@ var Map = {
         $("#"+elem).attr("height", bHeight);
         Map.buffer = Utils.getBuffer(elem);
     },
-
-    addEntity: function(e) {
-        // we expect this to be an Entity() object
-        this.entities.push(e);
-    },
-
-    getEntities: function(type) {
-        if (typeof type == "undefined") {
-            return Map.entities;
-        }
-        var _entities = [];
-        for (var i = 0; i < Map.entities.length; i++) {
-            if (Map.entities[i].type == type) {
-                _entities.push(Map.entities[i]);
-            }
-        }
-        return _entities;
-    },
-        
 
     render: function() {
         //back buffer
@@ -51,7 +30,7 @@ var Map = {
             }
         }
 
-        var clients = Map.getEntities("CLIENT");
+        var clients = EntityManager.getAll("CLIENT");
         for (var i = 0; i < clients.length; i++) {
             var x = clients[i].x * Globals.Map.SCALE;
             var y = clients[i].y * Globals.Map.SCALE;
