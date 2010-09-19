@@ -43,8 +43,8 @@ var Map = {
             Map.buffer.fillRect(x-1, y-1, 2, 2, "rgb(255, 0, 0)");
             
 
-            var Client = Map.clients[i];
-            var cAngle = Client.a - (Client.viewport.fov / 2);
+            var pos = Map.clients[i];
+            var cAngle = pos.a - (Client.viewport.fov / 2);
             var accuracy = Globals.Map.CAST_ACCURACY; 
             for (var j = 0; j < Client.buffer.getWidth(); j+= accuracy) {
                 if (cAngle < 0) {
@@ -53,17 +53,17 @@ var Map = {
                     cAngle -= 360;
                 }
 
-                var ray = Client.castRay(cAngle);
+                var ray = Client.castRay(pos.x, pos.y, cAngle);
                 var dist = ray.dist;
-                var px = Client.x + Utils.cos(cAngle) * dist;
-                var py = Client.y + Utils.sin(cAngle) * dist;
+                var px = pos.x + Utils.cos(cAngle) * dist;
+                var py = pos.y + Utils.sin(cAngle) * dist;
                 var colour = "";
                 if (ray.vertical) {
                     colour = "rgb(255, 128, 64)";
                 } else {
                     colour = "rgb(64, 128, 255)";
                 }
-                Map.buffer.line(Client.x * Globals.Map.SCALE, Client.y * Globals.Map.SCALE, px * Globals.Map.SCALE, py * Globals.Map.SCALE, colour);
+                Map.buffer.line(pos.x * Globals.Map.SCALE, pos.y * Globals.Map.SCALE, px * Globals.Map.SCALE, py * Globals.Map.SCALE, colour);
                 cAngle += (Client.viewport.col_width*accuracy);
             }
         }

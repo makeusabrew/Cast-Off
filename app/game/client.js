@@ -1,14 +1,18 @@
-Client = function() {
+Client = function(sId) {
     this.health = 100;
     this.x = 0;
     this.y = 0;
     this.a = 0;
+    this.sessionId = sId;
 };
 
-Client.prototype.spawn = function() {
-    this.x = 300;
-    this.y = 400;
-    this.a = 45;
+Client.prototype.spawn = function(world) {
+    var maxWidth = world.getWidth() * 64;       //@todo get from globals
+    var maxHeight = world.getHeight() * 64;  //@todo get from globals
+
+    this.x = Math.floor(Math.random() * maxWidth);
+    this.y = Math.floor(Math.random() * maxHeight);
+    this.a = Math.floor(Math.random() * 360);
 };
     
 Client.prototype.getPosition = function() {
@@ -19,8 +23,7 @@ Client.prototype.getPosition = function() {
     };
 };
 
-exports.factory = function() {
-    var c = new Client();
-    c.spawn();
+exports.factory = function(sId) {
+    var c = new Client(sId);
     return c;
 };

@@ -16,6 +16,8 @@ var Client = {
 
     world: null, // a reference to the world. could remove...
 
+    entities: [],
+
     viewport: {
     },
 
@@ -89,7 +91,7 @@ var Client = {
             } else if (cAngle >= 360) {
                 cAngle -= 360;
             }
-            var ray = Client.castRay(cAngle);
+            var ray = Client.castRay(Client.x, Client.y, cAngle);
             var dist = ray.dist;
             dist *= Utils.cos(Client.a - cAngle);
             var sliceHeight = Globals.World.BLOCK_SIZE / dist * Client.viewport.distance;
@@ -105,7 +107,7 @@ var Client = {
         }
     },
 
-    castRay: function(a) {
+    castRay: function(x, y, a) {
         var cY = 0;
         var cX = 0;
         var Ya = 0;
@@ -118,14 +120,14 @@ var Client = {
         // check for horizontal intersections first
         //@todo need some unit tests to verify every angle is caught and handled properly
         if (a > 180 && a < 360) {
-            cY = (Math.floor(Client.y / Globals.World.BLOCK_SIZE) * Globals.World.BLOCK_SIZE) - 1;
+            cY = (Math.floor(y / Globals.World.BLOCK_SIZE) * Globals.World.BLOCK_SIZE) - 1;
             Ya = -Globals.World.BLOCK_SIZE; 
-            cX = Client.x - (Client.y - cY) / Utils.tan(a);
+            cX = x - (y - cY) / Utils.tan(a);
             Xa = -Globals.World.BLOCK_SIZE / Utils.tan(a);
         } else if (a > 0 && a < 180) {
-            cY = (Math.floor(Client.y / Globals.World.BLOCK_SIZE) * Globals.World.BLOCK_SIZE) + Globals.World.BLOCK_SIZE;
+            cY = (Math.floor(y / Globals.World.BLOCK_SIZE) * Globals.World.BLOCK_SIZE) + Globals.World.BLOCK_SIZE;
             Ya = Globals.World.BLOCK_SIZE; 
-            cX = Client.x - (Client.y - cY) / Utils.tan(a);
+            cX = x - (y - cY) / Utils.tan(a);
             Xa = Globals.World.BLOCK_SIZE / Utils.tan(a);
         } else if (a == 0 || a == 180) {
             possible = false;
@@ -136,8 +138,8 @@ var Client = {
             var gX = Math.floor(cX / Globals.World.BLOCK_SIZE);
             var gY = Math.floor(cY / Globals.World.BLOCK_SIZE);
             if (gX < 0 || gX >= World.getWidth() || gY < 0 || gY >= World.getHeight() || cells[gY][gX] != 0) {
-                var dx = cX - Client.x;
-                var dy = cY - Client.y;
+                var dx = cX - x;
+                var dy = cY - y;
                 horzDist = Math.sqrt(dx*dx + dy*dy);
                 break;
             }
@@ -154,14 +156,14 @@ var Client = {
 
         // now check for vertical intersections
         if (a > 90 && a < 270) {
-            cX = (Math.floor(Client.x / Globals.World.BLOCK_SIZE) * Globals.World.BLOCK_SIZE) - 1;
+            cX = (Math.floor(x / Globals.World.BLOCK_SIZE) * Globals.World.BLOCK_SIZE) - 1;
             Xa = -Globals.World.BLOCK_SIZE;
-            cY = Client.y - (Client.x - cX) * Utils.tan(a);
+            cY = y - (x - cX) * Utils.tan(a);
             Ya = -Globals.World.BLOCK_SIZE * Utils.tan(a);
         } else if ((a > 270 && a < 360) || (a >= 0 && a < 90)) {
-            cX = (Math.floor(Client.x / Globals.World.BLOCK_SIZE) * Globals.World.BLOCK_SIZE) + Globals.World.BLOCK_SIZE;
+            cX = (Math.floor(x / Globals.World.BLOCK_SIZE) * Globals.World.BLOCK_SIZE) + Globals.World.BLOCK_SIZE;
             Xa = Globals.World.BLOCK_SIZE;
-            cY = Client.y - (Client.x - cX) * Utils.tan(a);
+            cY = y - (x - cX) * Utils.tan(a);
             Ya = Globals.World.BLOCK_SIZE * Utils.tan(a);
         } else if (a == 90 || a == 270) {
             possible = false;
@@ -173,8 +175,8 @@ var Client = {
             var gX = Math.floor(cX / Globals.World.BLOCK_SIZE);
             var gY = Math.floor(cY / Globals.World.BLOCK_SIZE);
             if (gX < 0 || gX >= World.getWidth() || gY < 0 || gY >= World.getHeight() || cells[gY][gX] != 0) {
-                var dx = cX - Client.x;
-                var dy = cY - Client.y;
+                var dx = cX - x;
+                var dy = cY - y;
                 vertDist = Math.sqrt(dx*dx + dy*dy);
                 break;
             }
@@ -269,6 +271,10 @@ var Client = {
                 Client.activate();
                 break;
 
+            case 'NEW_CLIENT':
+                Client.addEntity(msg.position);
+                break;
+
             default:
                 console.log("unknown msg type", msg.type);
                 break;
@@ -291,6 +297,16 @@ var Client = {
     registerEntities: function(entities) {
         // entities is an array, so just
         // push each entry onto our local stack
+        for (var i = 0; i < entities.length; i++) {
+            Client.addEntity(entities[i]);
+        }
+    },
+
+    addEntity: function(entity) {
+        Client.entities.push(entity);
+        console.log("new entity, pos:", entity);
+        
+        Map.registerClient(entity);
     }
 
 };

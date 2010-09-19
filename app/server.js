@@ -57,21 +57,31 @@ var world = require("./game/world.js").factory();
 var map = world.loadMap();
 
 socket.on("connection", function(sClient) {
-    var client = require("./game/client.js").factory();
+    var client = require("./game/client.js").factory(sClient.sessionId);
+    client.spawn(world);
     world.addClient(client);
+    
+    var entities = world.getOtherEntities(client);
     var pos = client.getPosition(); 
     var msg = {
         type: 'START',
         world: map,
         position: pos,
-        entities: [] //@todo
+        entities: entities
     };
     sClient.send(JSON.stringify(msg));
+
+    // now broadcast to existing clients with new entity position
+    var msg = {
+        type: 'NEW_CLIENT',
+        position: pos
+    };
+    sClient.broadcast(JSON.stringify(msg));
     sClient.on("message", function(msg, sClient) {
         // hand off to something else to handle message
     });
     sClient.on("disconnect", function() {
-        World.removeClient();
+        world.removeClient(client);
         //@todo broadcast? or does ^^ take care of that?
     });
 });
