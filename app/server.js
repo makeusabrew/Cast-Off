@@ -61,12 +61,14 @@ socket.on("connection", function(sClient) {
     client.spawn(world);
     world.addClient(client);
     
+    //@todo we've now created duplication here by including ourselves
+    // in getEntities and calling getData - needs refactoring
     var entities = world.getEntities();
-    var pos = client.getData(); 
+    var data = client.getData(); 
     var msg = {
         type: 'START',
         world: map,
-        position: pos,
+        cData: data,
         entities: entities
     };
     sClient.send(JSON.stringify(msg));
@@ -74,7 +76,7 @@ socket.on("connection", function(sClient) {
     // now broadcast to existing clients with new entity position
     var msg = {
         type: 'NEW_CLIENT',
-        position: pos
+        cData: data
     };
     sClient.broadcast(JSON.stringify(msg));
     sClient.on("message", function(msg, sClient) {

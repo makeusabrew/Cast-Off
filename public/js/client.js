@@ -4,6 +4,7 @@ var Client = {
     y: 0,
     a: 0.0,
     h: 0,
+    sessionId: null,
 
     // movement. @todo this needs serious improvement!
     forwards: false,
@@ -38,12 +39,14 @@ var Client = {
         console.log("Viewport", Client.viewport);
     },
 
-    spawn: function(pos) {
-        Client.h = 100;
-        Client.x = pos.x;
-        Client.y = pos.y;
-        Client.a = pos.a;
+    spawn: function(data) {
+        Client.h = data.h;
+        Client.x = data.x;
+        Client.y = data.y;
+        Client.a = data.a;
+        Client.sessionId = data.sessionId;
         console.log("spawned at x", Client.x, "y", Client.y, "a", Client.a);
+        console.log("My sessionId", Client.sessionId);
     },
 
     processInput: function() {
@@ -262,13 +265,13 @@ var Client = {
         switch (msg.type) {
             case 'START':
                 Client.loadWorld(msg.world);
-                Client.spawn(msg.position);
+                Client.spawn(msg.cData);
                 EntityManager.addEntities(msg.entities);
                 Client.activate();
                 break;
 
             case 'NEW_CLIENT':
-                EntityManager.addEntity(msg.entity);
+                EntityManager.addEntity(msg.cData);
                 break;
             
             default:

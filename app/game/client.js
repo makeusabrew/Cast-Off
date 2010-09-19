@@ -15,21 +15,13 @@ Client.prototype.spawn = function(world) {
     this.a = Math.floor(Math.random() * 360);
 };
     
-Client.prototype.getPosition = function() {
-    return {
-        x: this.x,
-        y: this.y,
-        a: this.a
-    };
-};
-
 Client.prototype.getData = function() {
     return {
         x: this.x,
         y: this.y,
         a: this.a,
         h: this.h,
-        sId: this.sessionId
+        sessionId: this.sessionId
     };
 };
 
