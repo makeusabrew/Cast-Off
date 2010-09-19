@@ -3,10 +3,11 @@ var url = require("url");
 var path = require("path");
 var fs = require("fs");
 var mime = require("./modules/mime");
+var io = require("socket.io");
 
 var WEBROOT = process.cwd()+"/../public";
 
-http.createServer(function(request, response) {
+var server = http.createServer(function(request, response) {
     var cUrl = url.parse(request.url).pathname;
 
     switch (cUrl) {
@@ -42,6 +43,10 @@ http.createServer(function(request, response) {
             });
             break;
     }
-}).listen(8124);
+});
+
+server.listen(8124);
 
 console.log("Server running on port 8124");
+
+var socket = io.listen(server);

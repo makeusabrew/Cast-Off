@@ -12,61 +12,14 @@ var Client = {
     right: false,
 
     buffer: null,
+    ws: null,
+
     viewport: {
     },
 
     init: function() {
-        $(window).keydown(function(e) {
-            e.preventDefault();
-            var key = e.which;
-            switch (key) {
-                case Utils.keys.UP_ARROW:
-                    Client.forwards = true;
-                    Client.backwards = false;
-                    break;
-
-                case Utils.keys.DOWN_ARROW:
-                    Client.forwards = false;
-                    Client.backwards = true;
-                    break;
-
-                case Utils.keys.LEFT_ARROW:
-                    Client.left = true;
-                    Client.right = false;
-                    break;
-
-                case Utils.keys.RIGHT_ARROW:
-                    Client.left = false;
-                    Client.right = true;
-                    break;
-                default:
-                    break;
-            }
-        });
-
-        $(window).keyup(function(e) {
-            e.preventDefault();
-            var key = e.which;
-            switch (key) {
-                case Utils.keys.UP_ARROW:
-                    Client.forwards = false;
-                    break;
-
-                case Utils.keys.DOWN_ARROW:
-                    Client.backwards = false;
-                    break;
-
-                case Utils.keys.LEFT_ARROW:
-                    Client.left = false;
-                    break;
-
-                case Utils.keys.RIGHT_ARROW:
-                    Client.right = false;
-                    break;
-                default:
-                    break;
-            }
-        });
+        Client._bindKeys();
+        Client._bindSockets();
     },
 
     setBuffer: function(elem) {
@@ -229,5 +182,80 @@ var Client = {
             ray.vertical = false;
         }
         return ray;
-    }
+    },
+
+    _bindKeys: function() {
+        
+        $(window).keydown(function(e) {
+            e.preventDefault();
+            var key = e.which;
+            switch (key) {
+                case Utils.keys.UP_ARROW:
+                    Client.forwards = true;
+                    Client.backwards = false;
+                    break;
+
+                case Utils.keys.DOWN_ARROW:
+                    Client.forwards = false;
+                    Client.backwards = true;
+                    break;
+
+                case Utils.keys.LEFT_ARROW:
+                    Client.left = true;
+                    Client.right = false;
+                    break;
+
+                case Utils.keys.RIGHT_ARROW:
+                    Client.left = false;
+                    Client.right = true;
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        $(window).keyup(function(e) {
+            e.preventDefault();
+            var key = e.which;
+            switch (key) {
+                case Utils.keys.UP_ARROW:
+                    Client.forwards = false;
+                    break;
+
+                case Utils.keys.DOWN_ARROW:
+                    Client.backwards = false;
+                    break;
+
+                case Utils.keys.LEFT_ARROW:
+                    Client.left = false;
+                    break;
+
+                case Utils.keys.RIGHT_ARROW:
+                    Client.right = false;
+                    break;
+                default:
+                    break;
+            }
+        });
+    },
+
+    _bindSockets: function() {
+        Client.ws = new WebSocket("ws://127.0.0.1:8124/socket.io");
+        Client.ws.onopen = Client.onOpen;
+        Client.ws.onmessage = Client.onMessage;
+        Client.ws.onclose = Client.onClose;
+    },
+    
+    onOpen: function () {
+        console.log("opened");
+    },
+
+    onMessage: function(msg) {
+        console.log("msg", msg);
+    },
+
+    onClose: function() {
+        console.log("closed");
+    },
+
 };
