@@ -1,7 +1,7 @@
 //@todo split out Client / Player?
 var Client = {
-    x: 280,
-    y: 230,
+    x: 0,
+    y: 0,
     a: 0.0,
     health: 0,
 
@@ -43,6 +43,7 @@ var Client = {
         Client.x = pos.x;
         Client.y = pos.y;
         Client.a = pos.a;
+        console.log("spawned at x", Client.x, "y", Client.y, "a", Client.a);
     },
 
     processInput: function() {

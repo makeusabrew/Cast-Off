@@ -31,13 +31,10 @@
                 Game.registerTickHandler(Client.tick);
                 Game.registerRenderHandler(Client.render);
 
-                Map.setBuffer("overmap");
-
-                Map.registerClient(Client);
-
-                Game.registerRenderHandler(Map.render);
-
                 Bus.subscribe("client_ready", null, function() {
+                    Map.setBuffer("overmap");
+                    Map.registerClient(Client);
+                    Game.registerRenderHandler(Map.render);
                     Game.tick();
                 });
             });
