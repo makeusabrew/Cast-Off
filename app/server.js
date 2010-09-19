@@ -50,3 +50,10 @@ server.listen(8124);
 console.log("Server running on port 8124");
 
 var socket = io.listen(server);
+
+socket.on("connection", function(client) {
+    client.send("hello client");
+    socket.on("message", function(msg, client) {
+        // hand off to something else to handle message
+    });
+});

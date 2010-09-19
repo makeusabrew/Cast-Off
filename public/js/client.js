@@ -70,8 +70,12 @@ var Client = {
 
     render: function() {
         //back buffer
-        Client.buffer.fillRect(0, 0, Client.buffer.getWidth(), Client.buffer.getHeight());
-
+        Client.buffer.fillRect(0, 0, Client.buffer.getWidth(), Client.buffer.getHeight(), "rgb(0,0,0)");
+        
+        // sky (ahem)
+        Client.buffer.fillRect(0, 0, Client.buffer.getWidth(), Client.buffer.getHeight()/2, "rgb(200, 200, 200)");
+        // floor (ahem)
+        Client.buffer.fillRect(0, Client.buffer.getHeight()/2, Client.buffer.getWidth(), Client.buffer.getHeight()/2, "rgb(100, 100, 100)");
         //@todo camera object here?
         //@todo better way of dealing with camera (pos, angle), world (what to render)
         //and surfaces (e.g. buffer)
