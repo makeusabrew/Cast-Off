@@ -14,6 +14,8 @@ var Client = {
     buffer: null,
     ws: null,
 
+    world: null, // a reference to the world. could remove...
+
     viewport: {
     },
 
@@ -36,11 +38,11 @@ var Client = {
         console.log("Viewport", Client.viewport);
     },
 
-    spawn: function() {
+    spawn: function(pos) {
         health = 100;
-        //@todo random X not in a block
-        //@todo random Y not in a block
-        //@todo semi random angle - but not directly facing a wall!
+        Client.x = pos.x;
+        Client.y = pos.y;
+        Client.a = pos.a;
     },
 
     processInput: function() {
@@ -255,11 +257,32 @@ var Client = {
     },
 
     onMessage: function(msg) {
+        var msg = JSON.parse(msg);
         console.log("msg", msg);
+        switch (msg.type) {
+            case 'START':
+                Client.loadWorld(msg.world);
+                Client.spawn(msg.position);
+                Client.activate();
+                break;
+
+            default:
+                console.log("unknown msg type", msg.type);
+                break;
+        
+        }
     },
 
     onClose: function() {
         console.log("closed");
     },
+
+    loadWorld: function(data) {
+        World.loadMap(data);
+    },
+
+    activate: function() {
+        $(document).trigger("client_ready");
+    }
 
 };

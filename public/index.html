@@ -18,7 +18,6 @@
         <script src="/js/game.js"></script>
         <script>
             $(function() {
-                World.loadMap();
                 Client.init();
                 Client.setBuffer("viewport");
                 Client.setViewport({
@@ -37,7 +36,9 @@
 
                 Game.registerRenderHandler(Map.render);
 
-                Game.tick();
+                $(document).bind("client_ready", function() {
+                    Game.tick();
+                });
             });
         </script>
     </head>

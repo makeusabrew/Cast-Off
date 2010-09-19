@@ -51,8 +51,22 @@ console.log("Server running on port 8124");
 
 var socket = io.listen(server);
 
+// keep track of all connected clients
+var clients = [];
+
+// load the map data once only
+var World = require("./game/world.js");
+var map = World.loadMap();
+
 socket.on("connection", function(client) {
-    client.send("hello client");
+    var Client = require("./game/client.js");
+    var pos = Client.spawn();
+    var msg = {
+        type: 'START',
+        world: map,
+        position: pos
+    };
+    client.send(JSON.stringify(msg));
     socket.on("message", function(msg, client) {
         // hand off to something else to handle message
     });
