@@ -240,10 +240,10 @@ var Client = {
     },
 
     _bindSockets: function() {
-        Client.ws = new WebSocket("ws://127.0.0.1:8124/socket.io");
-        Client.ws.onopen = Client.onOpen;
-        Client.ws.onmessage = Client.onMessage;
-        Client.ws.onclose = Client.onClose;
+        Client.ws = new io.Socket("127.0.0.1"); 
+        Client.ws.connect();
+        Client.ws.on("connect", Client.onOpen);
+        Client.ws.on("message", Client.onMessage);
     },
     
     onOpen: function () {
