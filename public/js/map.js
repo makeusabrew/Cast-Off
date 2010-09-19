@@ -2,7 +2,7 @@ var Map = {
 
     buffer: null,
 
-    clients: [],
+    entities: [],
 
     setBuffer: function(elem) {
         var bWidth = (World.getWidth() * Globals.World.BLOCK_SIZE) * Globals.Map.SCALE;
@@ -13,9 +13,24 @@ var Map = {
         Map.buffer = Utils.getBuffer(elem);
     },
 
-    registerClient: function(client) {
-        Map.clients.push(client);
+    addEntity: function(e) {
+        // we expect this to be an Entity() object
+        this.entities.push(e);
     },
+
+    getEntities: function(type) {
+        if (typeof type == "undefined") {
+            return Map.entities;
+        }
+        var _entities = [];
+        for (var i = 0; i < Map.entities.length; i++) {
+            if (Map.entities[i].type == type) {
+                _entities.push(Map.entities[i]);
+            }
+        }
+        return _entities;
+    },
+        
 
     render: function() {
         //back buffer
@@ -36,15 +51,17 @@ var Map = {
             }
         }
 
-        for (var i = 0; i < Map.clients.length; i++) {
-            var x = Map.clients[i].x * Globals.Map.SCALE;
-            var y = Map.clients[i].y * Globals.Map.SCALE;
+        var clients = Map.getEntities("CLIENT");
+        for (var i = 0; i < clients.length; i++) {
+            var x = clients[i].x * Globals.Map.SCALE;
+            var y = clients[i].y * Globals.Map.SCALE;
 
             Map.buffer.fillRect(x-1, y-1, 2, 2, "rgb(255, 0, 0)");
             
 
-            var pos = Map.clients[i];
-            var cAngle = pos.a - (Client.viewport.fov / 2);
+            var client = clients[i];
+
+            var cAngle = client.a - (Client.viewport.fov / 2);
             var accuracy = Globals.Map.CAST_ACCURACY; 
             for (var j = 0; j < Client.buffer.getWidth(); j+= accuracy) {
                 if (cAngle < 0) {
@@ -53,17 +70,17 @@ var Map = {
                     cAngle -= 360;
                 }
 
-                var ray = Client.castRay(pos.x, pos.y, cAngle);
+                var ray = Client.castRay(client.x, client.y, cAngle);
                 var dist = ray.dist;
-                var px = pos.x + Utils.cos(cAngle) * dist;
-                var py = pos.y + Utils.sin(cAngle) * dist;
+                var px = client.x + Utils.cos(cAngle) * dist;
+                var py = client.y + Utils.sin(cAngle) * dist;
                 var colour = "";
                 if (ray.vertical) {
                     colour = "rgb(255, 128, 64)";
                 } else {
                     colour = "rgb(64, 128, 255)";
                 }
-                Map.buffer.line(pos.x * Globals.Map.SCALE, pos.y * Globals.Map.SCALE, px * Globals.Map.SCALE, py * Globals.Map.SCALE, colour);
+                Map.buffer.line(client.x * Globals.Map.SCALE, client.y * Globals.Map.SCALE, px * Globals.Map.SCALE, py * Globals.Map.SCALE, colour);
                 cAngle += (Client.viewport.col_width*accuracy);
             }
         }

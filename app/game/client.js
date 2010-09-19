@@ -23,6 +23,15 @@ Client.prototype.getPosition = function() {
     };
 };
 
+Client.prototype.getData = function() {
+    return {
+        x: this.x,
+        y: this.y,
+        a: this.a,
+        sId: this.sessionId
+    };
+};
+
 exports.factory = function(sId) {
     var c = new Client(sId);
     return c;

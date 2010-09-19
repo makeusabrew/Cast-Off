@@ -9,6 +9,7 @@
 
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
         <script src="/js/socketio/socket.io.js"></script>
+        <script src="/js/entity.js"></script>
         <script src="/js/globals.js"></script>
         <script src="/js/surface.js"></script>
         <script src="/js/utils.js"></script>
@@ -33,7 +34,7 @@
 
                 Bus.subscribe("client_ready", null, function() {
                     Map.setBuffer("overmap");
-                    Map.registerClient(Client);
+                    Map.addEntity(Client);
                     Game.registerRenderHandler(Map.render);
                     Game.tick();
                 });

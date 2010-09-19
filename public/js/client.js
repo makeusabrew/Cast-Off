@@ -65,8 +65,6 @@ var Client = {
                 Client.a += 360;
             }
         }
-
-
     },
 
     tick: function() {
@@ -274,7 +272,7 @@ var Client = {
             case 'NEW_CLIENT':
                 Client.addEntity(msg.position);
                 break;
-
+            
             default:
                 console.log("unknown msg type", msg.type);
                 break;
@@ -302,11 +300,12 @@ var Client = {
         }
     },
 
-    addEntity: function(entity) {
+    addEntity: function(data) {
+        var entity = new Entity(data);
         Client.entities.push(entity);
-        console.log("new entity, pos:", entity);
+        console.log("new entity, data:", entity.getData());
         
-        Map.registerClient(entity);
+        Map.addEntity(entity);
     }
 
 };

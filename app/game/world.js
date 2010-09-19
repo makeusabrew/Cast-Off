@@ -53,7 +53,7 @@ World.prototype.getOtherEntities = function(client) {
     var others = [];
     for (var i = 0; i < this.clients.length; i++) {
         if (this.clients[i].sessionId != client.sessionId) {
-            others.push(this.clients[i].getPosition());
+            others.push(this.clients[i].getData());
         }
     }
     return others;
