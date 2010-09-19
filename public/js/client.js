@@ -265,6 +265,7 @@ var Client = {
             case 'START':
                 Client.loadWorld(msg.world);
                 Client.spawn(msg.position);
+                Client.registerEntities(msg.entities);
                 Client.activate();
                 break;
 
@@ -285,6 +286,11 @@ var Client = {
 
     activate: function() {
         Bus.publish("client_ready");
+    },
+
+    registerEntities: function(entities) {
+        // entities is an array, so just
+        // push each entry onto our local stack
     }
 
 };

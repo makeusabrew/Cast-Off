@@ -58,15 +58,17 @@ var clients = [];
 var World = require("./game/world.js");
 var map = World.loadMap();
 
-socket.on("connection", function(client) {
-    var Client = require("./game/client.js");
-    var pos = Client.spawn();
+socket.on("connection", function(sClient) {
+    var client = require("./game/client.js").factory();
+    clients.push(client);
+    var pos = client.getPosition(); 
     var msg = {
         type: 'START',
         world: map,
-        position: pos
+        position: pos,
+        entities: [] //@todo
     };
-    client.send(JSON.stringify(msg));
+    sClient.send(JSON.stringify(msg));
     socket.on("message", function(msg, client) {
         // hand off to something else to handle message
     });
