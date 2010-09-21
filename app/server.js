@@ -79,8 +79,24 @@ socket.on("connection", function(sClient) {
         cData: data
     };
     sClient.broadcast(JSON.stringify(msg));
-    sClient.on("message", function(msg, sClient) {
-        // hand off to something else to handle message
+    sClient.on("message", function(msg) {
+        var msg = JSON.parse(msg);
+        switch (msg.type) {
+            case 'MOVE':
+                // wait a tick, in theory we've already got the client object, right?
+                //var client = world.getClientBySessionId(sClient.sessionId);
+                console.log("client", client.sessionId, "moved");
+                client.moveTo(msg.pos);
+                var retMsg = {
+                    type: 'MOVE',
+                    cData: client.getData()
+                };
+                sClient.broadcast(JSON.stringify(retMsg));
+                break;
+            default:
+                console.log("unhandled client message", msg.type);
+                break;
+        }
     });
     sClient.on("disconnect", function() {
         world.removeClient(client);

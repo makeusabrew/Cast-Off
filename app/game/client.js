@@ -25,6 +25,12 @@ Client.prototype.getData = function() {
     };
 };
 
+Client.prototype.moveTo = function(pos) {
+    this.x = pos.x;
+    this.y = pos.y;
+    this.a = pos.a;
+};
+
 exports.factory = function(sId) {
     var c = new Client(sId);
     return c;

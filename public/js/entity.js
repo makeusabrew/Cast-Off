@@ -3,7 +3,7 @@ Entity = function(data) {
     this.y = data.y;
     this.a = data.a;
     this.h = data.h;
-    this.id = data.id;
+    this.id = data.sessionId;
     this.type = 'CLIENT';
 };
 
@@ -20,6 +20,12 @@ Entity.prototype.getData = function() {
 
 Entity.prototype.getId = function() {
     return this.id;
+};
+
+Entity.prototype.moveTo = function(pos) {
+    this.x = pos.x;
+    this.y = pos.y;
+    this.a = pos.a;
 };
 
 EntityManager = {
@@ -55,5 +61,21 @@ EntityManager = {
             }
         }
         return _entities;
+    },
+
+    /**
+     * eData is expected to contain a sessionId to find the entity by
+     *
+     * eData {
+     * sessionId: xx,
+     * x: x,
+     * y: x,
+     * a: x
+     * }
+     *
+     */
+    moveEntity: function(eData) {
+        var e = EntityManager.getById(eData.sessionId);
+        e.moveTo(eData);
     }
 };

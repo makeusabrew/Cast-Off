@@ -49,6 +49,8 @@ var Client = {
         console.log("My sessionId", Client.sessionId);
     },
 
+    throttled: false, // temporary throttle on movement
+
     processInput: function() {
         if (Client.forwards || Client.backwards) {
             // both essentially the same, just need to set a direction
@@ -64,6 +66,34 @@ var Client = {
                 Client.a -= 360;
             } else if (Client.a < 0) {
                 Client.a += 360;
+            }
+        }
+
+        if (Client.forwards || Client.backwards ||
+            Client.left || Client.right) {
+            
+            if (!Client.throttled) {
+                // update our entity
+                var e = EntityManager.getById(Client.sessionId);
+                e.moveTo({
+                    x: Client.x,
+                    y: Client.y,
+                    a: Client.a
+                });
+                // anything to process means we'll send an update to the server
+                var data= {
+                    type: 'MOVE',
+                    pos: {
+                        x: Client.x,
+                        y: Client.y,
+                        a: Client.a
+                    }
+                };
+                Client.ws.send(JSON.stringify(data));
+                Client.throttled = true;
+                setTimeout(function() {
+                    Client.throttled = false;
+                }, 50);
             }
         }
     },
@@ -272,6 +302,10 @@ var Client = {
 
             case 'NEW_CLIENT':
                 EntityManager.addEntity(msg.cData);
+                break;
+
+            case 'MOVE':
+                EntityManager.moveEntity(msg.cData);
                 break;
             
             default:

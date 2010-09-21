@@ -48,6 +48,15 @@ World.prototype.removeClient = function(client) {
     console.log("no client found to remove with sID", client.sessionId);
 };
 
+World.prototype.getClientBySessionId = function(sId) {
+    for (var i = 0; i < this.clients.length; i++) {
+        if (this.clients[i].sessionId == sId) {
+            return this.clients[i];
+        }
+    }
+    return false;
+};
+
 World.prototype.getOtherEntities = function(client) {
     // for now this only caters for clients...
     var others = [];
@@ -68,7 +77,7 @@ World.prototype.getWidth = function() {
 };
 
 World.prototype.getHeight = function() {
-    return this._height;;
+    return this._height;
 };
 
 exports.factory = function() {
