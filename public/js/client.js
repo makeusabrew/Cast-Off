@@ -51,6 +51,10 @@ var Client = {
         console.log("My sessionId", Client.sessionId);
     },
 
+    getId: function() {
+        return Client.sessionId;
+    },
+
     /**
      * NOTE! This function deliberately excludes health information for networking
      * purposes. This may change.
@@ -137,6 +141,19 @@ var Client = {
             }
             Client.buffer.line(i+0.5, y+0.5, i+0.5+1, y+0.5+(sliceHeight), colour);  
             cAngle += Client.viewport.col_width;
+        }
+
+        //@todo render other entities!
+        var entities = EntityManager.getAll();
+        // we could filter us out e.g. getOtherEntities(sId) but... hardly seems worth it
+        for (var i = 0; i < entities.length; i++) {
+            var entity = entities[i];
+            if (entity.getId() == Client.getId()) {
+                // this is me, carry on...
+                continue;
+            }
+            //@todo can i see you?
+            //@todo (poss not here) depth buffering
         }
     },
 
