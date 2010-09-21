@@ -28,5 +28,12 @@ var Utils = {
         DOWN_ARROW : 40,
         LEFT_ARROW : 37,
         RIGHT_ARROW : 39
+    },
+    
+    messages: {
+        START: 1,
+        CLIENT_CONNECTED: 2,
+        CLIENT_DISCONNECTED: 3
     }
+
 };

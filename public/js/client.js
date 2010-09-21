@@ -20,6 +20,8 @@ var Client = {
     viewport: {
     },
 
+    throttled: false, // temporary throttle on movement
+
     init: function() {
         Client._bindKeys();
         Client._bindSockets();
@@ -49,7 +51,17 @@ var Client = {
         console.log("My sessionId", Client.sessionId);
     },
 
-    throttled: false, // temporary throttle on movement
+    /**
+     * NOTE! This function deliberately excludes health information for networking
+     * purposes. This may change.
+     */
+    getPosition: function() {
+        return {
+            x: Client.x,
+            y: Client.y,
+            a: Client.a
+        };
+    },
 
     processInput: function() {
         if (Client.forwards || Client.backwards) {
@@ -75,19 +87,11 @@ var Client = {
             if (!Client.throttled) {
                 // update our entity
                 var e = EntityManager.getById(Client.sessionId);
-                e.moveTo({
-                    x: Client.x,
-                    y: Client.y,
-                    a: Client.a
-                });
+                e.moveTo(Client.getPosition());
                 // anything to process means we'll send an update to the server
-                var data= {
+                var data = {
                     type: 'MOVE',
-                    pos: {
-                        x: Client.x,
-                        y: Client.y,
-                        a: Client.a
-                    }
+                    pos: Client.getPosition()
                 };
                 Client.ws.send(JSON.stringify(data));
                 Client.throttled = true;
@@ -291,7 +295,6 @@ var Client = {
 
     onMessage: function(msg) {
         var msg = JSON.parse(msg);
-        console.log("msg", msg);
         switch (msg.type) {
             case 'START':
                 Client.loadWorld(msg.world);
@@ -305,13 +308,15 @@ var Client = {
                 break;
 
             case 'MOVE':
+                //@todo remove inconsistency! we should get entity by Id, then move it
+                // or EntityManager should always take care of this and we should never
+                // directoy get an entity. One or the other!
                 EntityManager.moveEntity(msg.cData);
                 break;
             
             default:
                 console.log("unknown msg type", msg.type);
                 break;
-        
         }
     },
 
