@@ -143,16 +143,49 @@ var Client = {
             cAngle += Client.viewport.col_width;
         }
 
-        //@todo render other entities!
         var entities = EntityManager.getAll();
         // we could filter us out e.g. getOtherEntities(sId) but... hardly seems worth it
+        var min = Client.a - (Client.viewport.fov / 2.0);
+        var max = min + Client.viewport.fov;
+
         for (var i = 0; i < entities.length; i++) {
             var entity = entities[i];
             if (entity.getId() == Client.getId()) {
                 // this is me, carry on...
                 continue;
             }
-            //@todo can i see you?
+            var pos = entity.getData();
+            var dy = pos.y - Client.y;
+            var dx = pos.x - Client.x;
+
+            var angle = Utils.rad2deg(Utils.atan2(dy, dx));
+            if (angle < 0) {
+                angle = 360 + angle;
+            }
+            if (max >= 360) {
+                max -= 360;
+                min -= 360;
+            }
+            // smashing! angle is now between 0 - 360 relative to our position
+            if ((min < angle) && (angle < max)) {
+                // in range
+
+                // get our offset, in degrees, from the left of the screen
+                var offset = Client.viewport.fov - (max - angle);
+
+                // convert to pixels
+                offset *= (Client.viewport.width / Client.viewport.fov);
+                var dx = pos.x - Client.x;
+                var dy = pos.y - Client.y;
+                var dist = Math.sqrt(dx*dx + dy*dy);
+
+                var eHeight = Globals.World.BLOCK_SIZE / dist * Client.viewport.distance;
+                var eWidth = 32 / dist * Client.viewport.distance;
+
+                var y = (Client.viewport.height / 2.0) - (eHeight / 2.0);
+                Client.buffer.fillRect(offset, y, eWidth, eHeight, "rgb(255, 0, 0)"); 
+            }
+
             //@todo (poss not here) depth buffering
         }
     },

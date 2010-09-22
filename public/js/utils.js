@@ -3,6 +3,10 @@ var Utils = {
         return (angle/180)*Math.PI;
     },
 
+    rad2deg: function(angle) {
+        return angle*(180/Math.PI);
+    },
+
     cos: function(angle) {
         return Math.cos(Utils.deg2rad(angle));
     },
@@ -17,6 +21,10 @@ var Utils = {
 
     atan: function(angle) {
         return Math.atan(Utils.deg2rad(angle));
+    },
+
+    atan2: function(y, x) {
+        return Math.atan2(y, x);
     },
 
     getBuffer: function(elem) {
