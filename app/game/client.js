@@ -1,3 +1,5 @@
+var Globals = require("../../public/js/globals").getObject();
+
 Client = function(sId) {
     this.h = 100;
     this.x = 0;
@@ -7,8 +9,8 @@ Client = function(sId) {
 };
 
 Client.prototype.spawn = function(world) {
-    var maxWidth = world.getWidth() * 64;       //@todo get from globals
-    var maxHeight = world.getHeight() * 64;  //@todo get from globals
+    var maxWidth = world.getWidth() * Globals.World.BLOCK_SIZE;
+    var maxHeight = world.getHeight() * Globals.World.BLOCK_SIZE;
 
     this.x = Math.floor(Math.random() * maxWidth);
     this.y = Math.floor(Math.random() * maxHeight);

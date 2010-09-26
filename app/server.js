@@ -4,6 +4,7 @@ var path = require("path");
 var fs = require("fs");
 var mime = require("./modules/mime");
 var io = require("socket.io");
+var Globals = require("../public/js/globals").getObject();
 
 var WEBROOT = process.cwd()+"/../public";
 var TEST_WEBROOT = process.cwd()+"/../tests/public";

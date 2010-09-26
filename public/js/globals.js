@@ -32,3 +32,9 @@ var Globals = {
     FOV: 60
 
 };
+
+if (typeof exports != "undefined") {
+    exports.getObject = function() {
+        return Globals;
+    };
+}
