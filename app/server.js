@@ -24,7 +24,6 @@ var server = http.createServer(function(request, response) {
                 // test stuff has a different directory prefix 
                 var cUrl = cUrl.substr(6);
                 var filename = path.join(TEST_WEBROOT, cUrl);
-                console.log("test filename", filename);
             } else {
                 // try and match static stuff in /public
                 var filename = path.join(WEBROOT, cUrl);
