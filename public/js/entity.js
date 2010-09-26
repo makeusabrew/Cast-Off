@@ -77,5 +77,17 @@ EntityManager = {
     moveEntity: function(eData) {
         var e = EntityManager.getById(eData.sessionId);
         e.moveTo(eData);
+    },
+
+    /**
+     * this function takes a global sessionId as its sole argument
+     */
+    removeEntity: function(id) {
+        for (var i = 0; i < EntityManager.entities.length; i++) {
+            if (EntityManager.entities[i].getId() == id) {
+                EntityManager.entities.splice(i, 1);
+                break;
+            }
+        }        
     }
 };

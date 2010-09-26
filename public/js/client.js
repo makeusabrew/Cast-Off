@@ -377,6 +377,10 @@ var Client = {
                 // directoy get an entity. One or the other!
                 EntityManager.moveEntity(msg.cData);
                 break;
+
+            case 'DISCONNECT':
+                EntityManager.removeEntity(msg.id);
+                break;
             
             default:
                 console.log("unknown msg type", msg.type);

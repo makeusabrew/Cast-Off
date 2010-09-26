@@ -107,6 +107,10 @@ socket.on("connection", function(sClient) {
     });
     sClient.on("disconnect", function() {
         world.removeClient(client);
-        //@todo broadcast? or does ^^ take care of that?
+        var msg = {
+            type: 'DISCONNECT',
+            id: sClient.sessionId
+        };
+        sClient.broadcast(JSON.stringify(msg));
     });
 });
