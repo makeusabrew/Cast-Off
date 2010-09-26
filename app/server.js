@@ -6,6 +6,7 @@ var mime = require("./modules/mime");
 var io = require("socket.io");
 
 var WEBROOT = process.cwd()+"/../public";
+var TEST_WEBROOT = process.cwd()+"/../tests/public";
 
 var server = http.createServer(function(request, response) {
     var cUrl = url.parse(request.url).pathname;
@@ -19,8 +20,15 @@ var server = http.createServer(function(request, response) {
             });
             break;
         default:
-            // try and match static stuff in /public
-            var filename= path.join(WEBROOT, cUrl);
+            if (cUrl.match(/tests/i)) {
+                // test stuff has a different directory prefix 
+                var cUrl = cUrl.substr(6);
+                var filename = path.join(TEST_WEBROOT, cUrl);
+                console.log("test filename", filename);
+            } else {
+                // try and match static stuff in /public
+                var filename = path.join(WEBROOT, cUrl);
+            }
             path.exists(filename, function(exists) {
                 if (!exists) {
                     console.log("sending 404 for URL", cUrl);
