@@ -31,6 +31,29 @@ var Utils = {
         return new Surface(elem);
     },
 
+    keyDown: function(k) {
+        Utils.keysPressed[k] = true;
+    },
+
+    keyUp: function(k) {
+        Utils.keysPressed[k] = false;
+    },
+
+    isKeyDown: function(k) {
+        return Utils.keysPressed[k];
+    },
+
+    captureKey: function(k) {
+        for (i in Utils.keys) {
+            if (Utils.keys[i] == k) {
+                return true;
+            }
+        }
+        return false;
+    },
+
+    keysPressed: {},
+
     keys: {
         UP_ARROW : 38,
         DOWN_ARROW : 40,

@@ -6,11 +6,10 @@ var Client = {
     h: 0,
     sessionId: null,
 
-    // movement. @todo this needs serious improvement!
-    forwards: false,
-    backwards: false,
-    left: false,
-    right: false,
+    velocity: 0,
+    rotation: 0,
+
+    lastHash: null,
 
     buffer: null,
     ws: null,
@@ -68,26 +67,35 @@ var Client = {
     },
 
     processInput: function() {
-        if (Client.forwards || Client.backwards) {
-            // both essentially the same, just need to set a direction
-            var dir = Client.forwards ? 1 : -1;
-            Client.x += Utils.cos(Client.a) * (Globals.Client.MOVE_SPEED * dir);
-            Client.y += Utils.sin(Client.a) * (Globals.Client.MOVE_SPEED * dir);
+        if (Utils.isKeyDown(Utils.keys.UP_ARROW)) {
+            Client.velocity = Globals.Client.MOVE_SPEED;
+        } else if (Utils.isKeyDown(Utils.keys.DOWN_ARROW)) {
+            Client.velocity = -Globals.Client.MOVE_SPEED;
+        } else {
+            Client.velocity = 0;
         }
 
-        if (Client.right || Client.left) {
-            var dir = Client.right ? 1 : - 1;
-            Client.a += (Globals.Client.TURN_SPEED * dir);
-            if (Client.a >= 360) {
-                Client.a -= 360;
-            } else if (Client.a < 0) {
-                Client.a += 360;
-            }
+        if (Utils.isKeyDown(Utils.keys.LEFT_ARROW)) {
+            Client.rotation = -Globals.Client.TURN_SPEED;
+        } else if (Utils.isKeyDown(Utils.keys.RIGHT_ARROW)) {
+            Client.rotation = Globals.Client.TURN_SPEED;
+        } else {
+            Client.rotation = 0;
+        }
+    },
+
+    tick: function() {
+        Client.a += Client.rotation;;
+        if (Client.a >= 360) {
+            Client.a -= 360;
+        } else if (Client.a < 0) {
+            Client.a += 360;
         }
 
-        if (Client.forwards || Client.backwards ||
-            Client.left || Client.right) {
-            
+        Client.x += Utils.cos(Client.a) * (Client.velocity);
+        Client.y += Utils.sin(Client.a) * (Client.velocity);
+
+        if (Client.hasMoved()) {
             if (!Client.throttled) {
                 // update our entity
                 var e = EntityManager.getById(Client.sessionId);
@@ -104,10 +112,6 @@ var Client = {
                 }, 50);
             }
         }
-    },
-
-    tick: function() {
-        //
     },
 
     render: function() {
@@ -296,55 +300,19 @@ var Client = {
     _bindKeys: function() {
         
         $(window).keydown(function(e) {
-            e.preventDefault();
             var key = e.which;
-            switch (key) {
-                case Utils.keys.UP_ARROW:
-                    Client.forwards = true;
-                    Client.backwards = false;
-                    break;
-
-                case Utils.keys.DOWN_ARROW:
-                    Client.forwards = false;
-                    Client.backwards = true;
-                    break;
-
-                case Utils.keys.LEFT_ARROW:
-                    Client.left = true;
-                    Client.right = false;
-                    break;
-
-                case Utils.keys.RIGHT_ARROW:
-                    Client.left = false;
-                    Client.right = true;
-                    break;
-                default:
-                    break;
+            if (Utils.captureKey(key)) {
+                e.preventDefault();
             }
+            Utils.keyDown(key);
         });
 
         $(window).keyup(function(e) {
-            e.preventDefault();
             var key = e.which;
-            switch (key) {
-                case Utils.keys.UP_ARROW:
-                    Client.forwards = false;
-                    break;
-
-                case Utils.keys.DOWN_ARROW:
-                    Client.backwards = false;
-                    break;
-
-                case Utils.keys.LEFT_ARROW:
-                    Client.left = false;
-                    break;
-
-                case Utils.keys.RIGHT_ARROW:
-                    Client.right = false;
-                    break;
-                default:
-                    break;
+            if (Utils.captureKey(key)) {
+                e.preventDefault();
             }
+            Utils.keyUp(key);
         });
     },
 
@@ -397,4 +365,11 @@ var Client = {
     activate: function() {
         Bus.publish("client_ready");
     },
+
+    hasMoved: function() {
+        var hash = Client.x+":"+Client.y+":"+Client.a;
+        var moved = hash != Client.lastHash;
+        Client.lastHash = hash;
+        return moved;
+    }
 };
