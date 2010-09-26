@@ -159,12 +159,19 @@ var Client = {
             var dx = pos.x - Client.x;
 
             var angle = Utils.rad2deg(Utils.atan2(dy, dx));
+            // without the below angle will always be > -180 && < 180
+            // we want it in terms of 0 - 360
             if (angle < 0) {
                 angle = 360 + angle;
             }
-            if (max >= 360) {
-                max -= 360;
+            
+            // have to catch two edge cases here
+            if (min < 0 && 360 - angle < 30) {
+                min += 360;
+                max += 360;
+            } else if (max >= 360 && angle < 30) {
                 min -= 360;
+                max -= 360;
             }
             // smashing! angle is now between 0 - 360 relative to our position
             if ((min < angle) && (angle < max)) {
@@ -185,6 +192,15 @@ var Client = {
                 var y = (Client.viewport.height / 2.0) - (eHeight / 2.0);
                 Client.buffer.fillRect(offset, y, eWidth, eHeight, "rgb(255, 0, 0)"); 
             }
+
+            /*
+            $("#debug").html(
+                "min " + Math.floor(min) + "<br />" +
+                "max " + Math.floor(max) + "<br />" +
+                "ang " + Math.floor(angle) + "<br />" +
+                "off " + Math.floor(offset) + "<br />"
+            );
+            */
 
             //@todo (poss not here) depth buffering
         }
