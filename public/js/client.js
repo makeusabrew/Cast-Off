@@ -100,6 +100,23 @@ var Client = {
         } else {
             Client.rotation = 0;
         }
+
+        if (Utils.isKeyDown(Utils.keys.SPACE_BAR)) {
+            //@todo check we can fire
+            //@todo fire, set timer for next available shot
+            /*
+             can fire ?
+                spawn new bullet with me as owner
+                Client.shooting
+                setTimeout until Client not shooting
+            */
+            BulletManager.spawnBullet({
+                x: Client.x,
+                y: Client.y,
+                a: Client.a,
+                owner: Client.sessionId
+            });
+        }
     },
 
     tick: function() {
