@@ -23,9 +23,9 @@
                 Client.init();
                 Client.setBuffer("viewport");
                 Client.setViewport({
-                    'width': 640,
-                    'height': 480,
-                    'fov': 60
+                    'width': Globals.Resolution.MEDIUM.w,
+                    'height': Globals.Resolution.MEDIUM.h,
+                    'fov': Globals.FOV
                 });
 
                 Game.registerInputHandler(Client.processInput);
@@ -57,6 +57,10 @@
             </div>
         </div>
         <div id="debug"></div>
+        <div id="controls">
+            <a href="#" onclick="Client.setResolution('HIGH');">High Res</a>
+            <a href="#" onclick="Client.setResolution('MEDIUM');">Med Res</a>
+            <a href="#" onclick="Client.setResolution('LOW');">Low Res</a>
         <footer>
             by <a href="http://github.com/makeusabrew">makeusabrew</a>
         </footer>

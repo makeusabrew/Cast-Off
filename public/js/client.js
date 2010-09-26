@@ -12,9 +12,12 @@ var Client = {
     lastHash: null,
 
     buffer: null,
+    bElem: null, // keep a handle to the actual buffer element
     ws: null,
 
     world: null, // a reference to the world. could remove...
+
+    wallDist: [],
 
     viewport: {
     },
@@ -28,6 +31,20 @@ var Client = {
 
     setBuffer: function(elem) {
         Client.buffer = Utils.getBuffer(elem);
+        Client.bElem = elem;
+    },
+
+    setResolution: function(res) {
+        var r = Globals.Resolution[res];
+        if (typeof r == "undefined") {
+            console.log("attempted to set invalid resolution", res);
+            return;
+        }
+        Client.setViewport({
+            'width': r.w,
+            'height': r.h,
+            'fov': Client.viewport.fov
+        });
     },
 
     setViewport: function(options) {
@@ -37,7 +54,8 @@ var Client = {
         // see http://www.permadi.com/tutorial/raycast/rayc5.html
         Client.viewport.col_width = options.fov / options.width;
         Client.viewport.distance = (options.width / 2) / Utils.tan(options.fov / 2);
-        console.log("Viewport", Client.viewport);
+        
+        $("#"+Client.bElem).attr("width", options.width).attr("height", options.height);
     },
 
     spawn: function(data) {
