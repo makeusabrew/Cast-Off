@@ -161,8 +161,13 @@ var Client = {
             } else {
                 colour = "rgb(10, 10, 128)";
             }
-            Client.buffer.line(i+0.5, y+0.5, i+0.5+1, y+0.5+(sliceHeight), colour);  
+            y = Math.floor(y);
+            sliceHeight = Math.floor(sliceHeight);
+            Client.buffer.line(i, y, i+1, y+(sliceHeight), colour);  
             cAngle += Client.viewport.col_width;
+
+            // cache the distance
+            Client.wallDist[i] = dist;
         }
 
         var entities = EntityManager.getAll();
@@ -212,7 +217,14 @@ var Client = {
                 var eWidth = 32 / dist * Client.viewport.distance;
 
                 var y = (Client.viewport.height / 2.0) - (eHeight / 2.0);
-                Client.buffer.fillRect(offset, y, eWidth, eHeight, "rgb(255, 0, 0)"); 
+                // we have to check pixel by pixel if we can be rendered
+                offset = Math.floor(offset);
+                eWidth = Math.floor(eWidth);
+                for (var j = offset; j < offset+eWidth; j++) {
+                    if (dist < Client.wallDist[j]) {
+                        Client.buffer.line(j, y, j+1, y+(eHeight), "rgba(255, 0, 0, 1)");  
+                    }
+                }
             }
 
             /*
