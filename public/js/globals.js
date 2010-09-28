@@ -29,7 +29,11 @@ var Globals = {
         },
     },
 
-    FOV: 60
+    FOV: 60,
+
+    Bullets: {
+        VELOCITY: 50
+    }
 
 };
 

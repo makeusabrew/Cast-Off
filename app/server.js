@@ -62,10 +62,15 @@ var socket = io.listen(server);
 
 // load the map data once only
 var world = require("./game/world.js").factory();
-var map = world.loadMap();
+world.loadMap();
 
 socket.on("connection", function(sClient) {
-    var client = require("./game/client.js").factory(sClient.sessionId);
+    var client = require("./game/client").factory(sClient.sessionId);
+    /**
+     *
+     * from here we only want to be dealing with client rather than sClient
+     * unless dealing with socket stuff. all game logic should deal with client!
+     */
     client.spawn(world);
     world.addClient(client);
     
@@ -75,7 +80,7 @@ socket.on("connection", function(sClient) {
     var data = client.getData(); 
     var msg = {
         type: 'START',
-        world: map,
+        world: world.getMap(),
         cData: data,
         entities: entities
     };
@@ -91,15 +96,25 @@ socket.on("connection", function(sClient) {
         var msg = JSON.parse(msg);
         switch (msg.type) {
             case 'MOVE':
-                // wait a tick, in theory we've already got the client object, right?
-                //var client = world.getClientBySessionId(sClient.sessionId);
-                console.log("client", client.sessionId, "moved");
                 client.moveTo(msg.pos);
                 var retMsg = {
                     type: 'MOVE',
                     cData: client.getData()
                 };
                 sClient.broadcast(JSON.stringify(retMsg));
+                break;
+            case 'FIRE':
+                var bullet = require("./game/bullet").factory(client.getId());
+                bullet.spawn(msg.pos);
+                world.addBullet(bullet);
+                console.log("client", client.getId(), "fired!");
+
+                // NOTE that we use socket.broadcast NOT sClient.broadcast
+                // this is because we want to broadcast the shot to *everyone*
+                socket.broadcast(JSON.stringify({
+                    type:'FIRE',
+                    bData: bullet.getData()
+                }));
                 break;
             default:
                 console.log("unhandled client message", msg.type);

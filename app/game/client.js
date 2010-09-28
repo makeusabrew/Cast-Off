@@ -33,6 +33,10 @@ Client.prototype.moveTo = function(pos) {
     this.a = pos.a;
 };
 
+Client.prototype.getId = function() {
+    return this.sessionId;
+};
+
 exports.factory = function(sId) {
     var c = new Client(sId);
     return c;

@@ -1,5 +1,6 @@
 World = function() {
     this.clients = [];
+    this.bullets = [];
     this.cells = null;
 };
 
@@ -29,7 +30,14 @@ World.prototype.loadMap = function() {
     this.cells = d;
     this._width = d[0].length;
     this._height = d.length;
+};
+
+World.prototype.getMap = function() {
     return this.cells;
+};
+
+World.prototype.addBullet = function(bullet) {
+    this.bullets.push(bullet);
 };
 
 World.prototype.addClient = function(client) {
@@ -55,6 +63,10 @@ World.prototype.getClientBySessionId = function(sId) {
         }
     }
     return false;
+};
+
+World.addBullet = function(bullet) {
+    this.bullets.push(bullet);
 };
 
 World.prototype.getOtherEntities = function(client) {

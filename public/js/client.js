@@ -110,12 +110,12 @@ var Client = {
                 Client.shooting
                 setTimeout until Client not shooting
             */
-            BulletManager.spawnBullet({
-                x: Client.x,
-                y: Client.y,
-                a: Client.a,
-                owner: Client.sessionId
-            });
+            if (!Client.firing) {
+                Client.fire();
+                setTimeout(function() {
+                    Client.firing = false;
+                }, 500);
+            }
         }
     },
 
@@ -398,6 +398,9 @@ var Client = {
             case 'DISCONNECT':
                 EntityManager.removeEntity(msg.id);
                 break;
+
+            case 'FIRE':
+                BulletManager.addBullet(msg.bData);
             
             default:
                 console.log("unknown msg type", msg.type);
@@ -422,5 +425,22 @@ var Client = {
         var moved = hash != Client.lastHash;
         Client.lastHash = hash;
         return moved;
+    },
+
+    fire: function() {
+        /* we won't simulate firing at all client side
+           we'll just tell the server and get it from there
+        BulletManager.spawnBullet({
+            x: Client.x,
+            y: Client.y,
+            a: Client.a,
+            owner: Client.sessionId
+        });
+        */
+        var msg = {
+            type: 'FIRE',
+            pos: Client.getPosition()
+        };
+        Client.ws.send(JSON.stringify(msg));
     }
 };
