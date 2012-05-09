@@ -364,8 +364,7 @@ var Client = {
     },
 
     _bindSockets: function() {
-        Client.ws = new io.Socket(); 
-        Client.ws.connect();
+        Client.ws = new io.connect(); 
         Client.ws.on("connect", Client.onOpen);
         Client.ws.on("message", Client.onMessage);
     },
@@ -391,7 +390,7 @@ var Client = {
             case 'MOVE':
                 //@todo remove inconsistency! we should get entity by Id, then move it
                 // or EntityManager should always take care of this and we should never
-                // directoy get an entity. One or the other!
+                // directly get an entity. One or the other!
                 EntityManager.moveEntity(msg.cData);
                 break;
 

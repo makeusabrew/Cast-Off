@@ -57,15 +57,15 @@ server.listen(8124);
 
 console.log("Server running on port 8124");
 
-var socket = io.listen(server);
+var io = io.listen(server);
 
 
 // load the map data once only
 var world = require("./game/world.js").factory();
 world.loadMap();
 
-socket.on("connection", function(sClient) {
-    var client = require("./game/client").factory(sClient.sessionId);
+io.sockets.on("connection", function(sClient) {
+    var client = require("./game/client").factory(sClient.id);
     /**
      *
      * from here we only want to be dealing with client rather than sClient
@@ -91,7 +91,7 @@ socket.on("connection", function(sClient) {
         type: 'NEW_CLIENT',
         cData: data
     };
-    sClient.broadcast(JSON.stringify(msg));
+    sClient.emit(JSON.stringify(msg));
     sClient.on("message", function(msg) {
         var msg = JSON.parse(msg);
         switch (msg.type) {
@@ -101,7 +101,7 @@ socket.on("connection", function(sClient) {
                     type: 'MOVE',
                     cData: client.getData()
                 };
-                sClient.broadcast(JSON.stringify(retMsg));
+                sClient.emit(JSON.stringify(retMsg));
                 break;
             case 'FIRE':
                 var bullet = require("./game/bullet").factory(client.getId());
@@ -111,7 +111,7 @@ socket.on("connection", function(sClient) {
 
                 // NOTE that we use socket.broadcast NOT sClient.broadcast
                 // this is because we want to broadcast the shot to *everyone*
-                socket.broadcast(JSON.stringify({
+                io.sockets.emit(JSON.stringify({
                     type:'FIRE',
                     bData: bullet.getData()
                 }));
@@ -125,8 +125,8 @@ socket.on("connection", function(sClient) {
         world.removeClient(client);
         var msg = {
             type: 'DISCONNECT',
-            id: sClient.sessionId
+            id: sClient.id
         };
-        sClient.broadcast(JSON.stringify(msg));
+        sClient.emit(JSON.stringify(msg));
     });
 });
